@@ -3,7 +3,6 @@ import time
 import matplotlib.pyplot as plt
 from tensorflow.keras.datasets import fashion_mnist
 
-# 导入你的模块
 from linear import Linear
 from activations import ReLU
 from loss import CrossEntropyloss
@@ -13,7 +12,6 @@ from batchnorm import BatchNorm
 from utils import calculate_accuracy
 from dataloader import DataLoader
 
-# 简易模型容器
 class Sequential:
     def __init__(self, layers):
         self.layers = layers
@@ -43,12 +41,12 @@ def build_fashion_net():
 
 # 实验逻辑
 def run_experiment(name, opt_class, lr, x_train, y_train, x_test, y_test):
-    print(f"🚀 开始训练: {name} (lr={lr})")
+    print(f"开始训练: {name} (lr={lr})")
     np.random.seed(42)
     model = build_fashion_net()
     criterion = CrossEntropyloss()
     
-    # 区分 SGD 需要 momentum 参数
+    # 区分SGD需要momentum参数
     if name == "SGD":
         optimizer = opt_class(model.get_params(), lr=lr, momentum=0.9)
     else:
@@ -60,7 +58,7 @@ def run_experiment(name, opt_class, lr, x_train, y_train, x_test, y_test):
     loss_history = []
     acc_history = []
     
-    for epoch in range(5): # 跑 5 个 Epoch
+    for epoch in range(5): 
         model.train()
         epoch_loss = 0
         for x_batch, y_batch_onehot in train_loader:
@@ -88,13 +86,13 @@ def run_experiment(name, opt_class, lr, x_train, y_train, x_test, y_test):
     return loss_history, acc_history
 
 if __name__ == "__main__":
-    # 加载数据
+   
     (x_train, y_train), (x_test, y_test) = fashion_mnist.load_data()
-    # 预处理
+   
     x_train = x_train.reshape(-1, 784).astype(np.float32) / 255.0
     x_test = x_test.reshape(-1, 784).astype(np.float32) / 255.0
 
-    # 对比训练
+    # 对比
     loss_sgd, acc_sgd = run_experiment("SGD", SGD, 0.01, x_train, y_train, x_test, y_test)
     loss_adam, acc_adam = run_experiment("Adam", Adam, 0.001, x_train, y_train, x_test, y_test)
 
