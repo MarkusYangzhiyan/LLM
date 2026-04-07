@@ -4,15 +4,15 @@ from sklearn.datasets import fetch_california_housing
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 
-# 导入你的模块
+
 from linear import Linear
 from activations import ReLU
-from loss import MSEloss # ⚠️ 注意这里用 MSE
+from loss import MSEloss 
 from optimizer import Adam, SGD
 from batchnorm import BatchNorm
 from dropout import Dropout
 
-# 复用 Sequential 类 (为了节省篇幅，实际运行时请确保定义了它，或者引用上面的)
+
 class Sequential:
     def __init__(self, layers): self.layers = layers
     def forward(self, x): 
@@ -27,7 +27,7 @@ class Sequential:
     def eval(self): 
         for l in self.layers: l.eval()
 
-# 专门针对回归的数据加载器 (不做 One-Hot)
+
 class RegLoader:
     def __init__(self, X, y, batch_size=64):
         self.X, self.y = X, y
@@ -53,7 +53,7 @@ def build_reg_net():
     ])
 
 def run_experiment(name, opt_class, lr, x_train, y_train, x_test, y_test):
-    print(f"🏠 开始训练: {name} (lr={lr})")
+    print(f"开始训练: {name} (lr={lr})")
     np.random.seed(42)
     model = build_reg_net()
     criterion = MSEloss()
@@ -82,7 +82,7 @@ def run_experiment(name, opt_class, lr, x_train, y_train, x_test, y_test):
         if epoch % 5 == 0:
             print(f"   Epoch {epoch} | Train MSE: {avg_loss:.4f}")
             
-    # 最终测试集 MSE
+    # 最终测试集MSE
     model.eval()
     pred_test = model.forward(x_test)
     final_mse = np.mean((pred_test - y_test)**2)
@@ -93,7 +93,7 @@ if __name__ == "__main__":
     data = fetch_california_housing()
     X, y = data.data, data.target.reshape(-1, 1)
     
-    # 归一化 (回归任务非常重要！)
+    # 归一化后画图
     scaler_x = StandardScaler()
     X = scaler_x.fit_transform(X)
     
