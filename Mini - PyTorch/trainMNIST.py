@@ -1,20 +1,19 @@
 import numpy as np
 import time
-import matplotlib.pyplot as plt  # 引入画图库
+import matplotlib.pyplot as plt  
 
-# 1. 导入你的自定义模块
 from layers import Layers
 from linear import Linear
 from activations import ReLU
 from loss import CrossEntropyloss
-from optimizer import Adam, SGD  # ⚠️ 记得确保 optimizer.py 里有 SGD 类
+from optimizer import Adam, SGD  
 from dropout import Dropout
 from batchnorm import BatchNorm
 from utils import load_mnist_data, calculate_accuracy
 from dataloader import DataLoader
 
 # ==========================================
-# 模型定义 (保持不变)
+# 模型定义 
 # ==========================================
 class Model:
     def __init__(self, layers):
@@ -52,23 +51,22 @@ class MNISTNet(Model):
         super().__init__(layers)
 
 # ==========================================
-# 核心：封装训练函数
+# 训练函数
 # ==========================================
 def run_experiment(optimizer_name, x_train, y_train, x_test, y_test, epochs=5):
     print(f"\n{'='*20} 开始训练: {optimizer_name} {'='*20}")
     
-    # 1. ⚠️ 关键：每次实验都要重新初始化模型和种子，确保起点一致
+    # 每次实验都要重新初始化模型和种子
     np.random.seed(42) 
     model = MNISTNet()
     
-    # 2. 准备数据
     train_loader = DataLoader(x_train, y_train, batch_size=64, shuffle=True)
     test_loader = DataLoader(x_test, y_test, batch_size=64, shuffle=False)
     criterion = CrossEntropyloss()
     
-    # 3. 选择优化器
-    # SGD 通常需要较大的学习率 (0.01 或 0.1) 才能动起来
-    # Adam 通常需要较小的学习率 (0.001)
+    # 选择优化器
+    # SGD需要较大的学习率 (0.01 或 0.1) 才能动起来
+    # Adam需要较小的学习率 (0.001)
     if optimizer_name == "SGD":
         optimizer = SGD(model.get_params(), lr=0.01, momentum=0.9)
     elif optimizer_name == "Adam":
@@ -77,7 +75,6 @@ def run_experiment(optimizer_name, x_train, y_train, x_test, y_test, epochs=5):
     # 记录历史数据用于画图
     history = {'loss': [], 'acc': []}
     
-    # 4. 训练循环
     for epoch in range(epochs):
         start_time = time.time()
         model.train()
@@ -124,10 +121,10 @@ def run_experiment(optimizer_name, x_train, y_train, x_test, y_test, epochs=5):
     return history
 
 # ==========================================
-# 主程序
+# main
 # ==========================================
 if __name__ == "__main__":
-    # 加载数据
+    
     x_train, y_train, x_test, y_test = load_mnist_data()
     
     if x_train is None:
