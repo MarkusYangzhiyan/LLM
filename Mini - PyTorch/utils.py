@@ -18,7 +18,7 @@ def to_one_hot(y, num_classes=10):
 
 
     one_hot = np.zeros((N, num_classes))
-    # 利用 numpy 的高级索引，一行代码完成赋值
+  
     one_hot[np.arange(N), y] = 1
     return one_hot
 
@@ -26,7 +26,7 @@ def calculate_accuracy(probs, y_true):
     """
     计算准确率
     probs: 模型输出的概率矩阵 (N, 10)
-    y_true: 真实的标签，支持 One-Hot 或 整数索引
+    y_true: 真实的标签，支持One-Hot或整数索引
     """
     # 找到概率最大的那个下标 (预测出的数字)
     y_pred = np.argmax(probs, axis=1)
@@ -41,28 +41,22 @@ def calculate_accuracy(probs, y_true):
 
 def load_mnist_data():
     """
-    尝试加载数据。
-    为了方便，我们借用 keras/tensorflow 的下载功能。
-    如果你没有安装 keras，你需要手动下载 mnist.npz 并在本地读取。
+    用 keras/tensorflow 加载数据。
     """
-    try:
-        from tensorflow.keras.datasets import mnist
-        # 下载数据 (如果本地有缓存会自动读取)
-        (x_train, y_train), (x_test, y_test) = mnist.load_data()
+    
+    from tensorflow.keras.datasets import mnist
+       
+    (x_train, y_train), (x_test, y_test) = mnist.load_data()
         
-        # 预处理 1: 拍扁 (Flatten)
-        # (60000, 28, 28) -> (60000, 784)
-        x_train = x_train.reshape(x_train.shape[0], -1)
-        x_test = x_test.reshape(x_test.shape[0], -1)
+    # 预处理 1: Flatten
+    # (60000, 28, 28) -> (60000, 784)
+    x_train = x_train.reshape(x_train.shape[0], -1)
+    x_test = x_test.reshape(x_test.shape[0], -1)
         
-        # 预处理 2: 归一化 (Normalize)
-        # 把像素从 0-255 变成 0-1 的浮点数
-        x_train = x_train.astype(np.float32) / 255.0
-        x_test = x_test.astype(np.float32) / 255.0
+    # 预处理 2: 归一化 
+    # 把像素从 0-255 变成 0-1 的浮点数
+    x_train = x_train.astype(np.float32) / 255.0
+    x_test = x_test.astype(np.float32) / 255.0
         
-        return x_train, y_train, x_test, y_test
+    return x_train, y_train, x_test, y_test
         
-    except ImportError:
-        print("错误: 未检测到 tensorflow/keras。")
-        print("建议运行: pip install tensorflow 以便自动下载数据集")
-        return None, None, None, None
