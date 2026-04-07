@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from tensorflow.keras.datasets import cifar10
 
-# 导入模块
+
 from linear import Linear
 from activations import ReLU
 from loss import CrossEntropyloss
@@ -12,7 +12,7 @@ from batchnorm import BatchNorm
 from utils import calculate_accuracy
 from dataloader import DataLoader
 
-# 复用 Sequential (同上，请确保有定义)
+# 复用 Sequential 
 class Sequential:
     def __init__(self, layers): self.layers = layers
     def forward(self, x): 
@@ -36,7 +36,7 @@ def build_cifar_net():
     ])
 
 def run_experiment(name, opt_class, lr, x_train, y_train, x_test, y_test):
-    print(f"🖼️ 开始训练: {name} (CIFAR-10 会比较慢，请耐心...)")
+    print(f" 开始训练: {name} (CIFAR-10 ...)")
     np.random.seed(42)
     model = build_cifar_net()
     criterion = CrossEntropyloss()
@@ -44,13 +44,13 @@ def run_experiment(name, opt_class, lr, x_train, y_train, x_test, y_test):
     if name == "SGD": optimizer = opt_class(model.get_params(), lr=lr, momentum=0.9)
     else: optimizer = opt_class(model.get_params(), lr=lr)
 
-    # 稍微加大 Batch Size 以利用矩阵乘法加速
+    # 加大 Batch Size 利用矩阵乘法加速
     train_loader = DataLoader(x_train, y_train, batch_size=256, shuffle=True)
     test_loader = DataLoader(x_test, y_test, batch_size=256, shuffle=False)
     
     history = []
     
-    # 只跑 3 个 Epoch 演示效果，否则太慢
+    # 只跑3个Epoch演示效果
     for epoch in range(3): 
         model.train()
         total_loss = 0
@@ -61,7 +61,7 @@ def run_experiment(name, opt_class, lr, x_train, y_train, x_test, y_test):
             optimizer.step(model.get_grads())
             total_loss += loss
             
-            # 打印进度条，因为CIFAR很慢
+            # 打印进度条
             if i % 50 == 0: print(f"   Step {i} Loss: {loss:.4f}")
 
         # 测试
